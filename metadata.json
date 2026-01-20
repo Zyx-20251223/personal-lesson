@@ -1,0 +1,5 @@
+{
+  "name": "ClassTracker - 学生课时管理",
+  "description": "基于 Vue 3 和 Firebase 的单文件课时管理系统，支持离线优先的双重存储策略。",
+  "requestFramePermissions": []
+}
