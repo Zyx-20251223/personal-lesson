@@ -301,7 +301,7 @@
                         <!-- Cloud Config -->
                         <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
                             <h3 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
-                                <i class="fa-brands fa-google text-indigo-500"></i> 数据同步
+                                <i class="fa-brands fa-google text-indigo-500"></i> 数据同步 (Realtime Database)
                             </h3>
                             <p class="text-xs text-gray-500 leading-relaxed mb-4">
                                 请复制 Firebase 控制台 > 项目设置 > 常规 > 下方的 "SDK 设置与配置" 中的 <code>firebaseConfig</code> 对象内容并粘贴。
@@ -309,7 +309,7 @@
                                     <i class="fa-regular fa-circle-question"></i> 查看详细教程
                                 </button>
                             </p>
-                            <textarea v-model="firebaseConfigInput" rows="5" class="w-full text-xs font-mono p-3 bg-slate-900 text-emerald-400 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-inner" placeholder='{ "apiKey": "...", "authDomain": "...", ... }'></textarea>
+                            <textarea v-model="firebaseConfigInput" rows="5" class="w-full text-xs font-mono p-3 bg-slate-900 text-emerald-400 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-inner" placeholder='{ "apiKey": "...", "authDomain": "...", "databaseURL": "...", ... }'></textarea>
                             <div class="flex gap-3">
                                 <button @click="saveConfig" class="flex-1 bg-slate-800 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-slate-900 transition-colors shadow-lg shadow-slate-200 active:scale-95 touch-manipulation">
                                     保存配置
@@ -337,7 +337,7 @@
                     </div>
                     
                     <div class="p-4 text-center text-[10px] text-gray-300">
-                        Version 1.2.0 • Designed for Vue
+                        Version 1.3.0 • RTDB Edition
                     </div>
                 </div>
 
@@ -370,8 +370,21 @@
                                 </div>
                             </div>
 
+                            <!-- NEW STEP: Create Realtime Database -->
                             <div class="flex gap-4">
                                 <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">3</div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 mb-1">创建 Realtime Database</h3>
+                                    <p class="text-xs text-gray-500 leading-relaxed mb-2">
+                                        在左侧菜单点击 <strong>构建 (Build)</strong> > <strong>Realtime Database</strong>。<br>
+                                        点击 "创建数据库"，选择位置，并选择 <strong>以测试模式开始 (Start in test mode)</strong>。<br>
+                                        <span class="text-emerald-500 font-bold block mt-1"><i class="fa-solid fa-check"></i> 推荐：Realtime Database 不需要绑定支付方式。</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">4</div>
                                 <div>
                                     <h3 class="font-bold text-slate-800 mb-1">进入项目设置</h3>
                                     <p class="text-xs text-gray-500 leading-relaxed">点击左上角的 <i class="fa-solid fa-gear text-gray-400"></i> 齿轮图标，选择 <strong>项目设置 (Project settings)</strong>。</p>
@@ -379,7 +392,7 @@
                             </div>
 
                             <div class="flex gap-4">
-                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">4</div>
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">5</div>
                                 <div>
                                     <h3 class="font-bold text-slate-800 mb-1">注册 Web 应用</h3>
                                     <p class="text-xs text-gray-500 leading-relaxed">
@@ -389,11 +402,12 @@
                             </div>
 
                             <div class="flex gap-4">
-                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">5</div>
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">6</div>
                                 <div>
                                     <h3 class="font-bold text-slate-800 mb-1">复制配置代码</h3>
                                     <p class="text-xs text-gray-500 leading-relaxed mb-2">
                                         在 "SDK 设置与配置" 选项中，选择 <strong>Config</strong> (不是 CDN)。复制 <code>const firebaseConfig = { ... };</code> 大括号内的内容。
+                                        <br><span class="text-amber-500 text-[10px]">* 确保代码中包含 <code>databaseURL</code> 字段。</span>
                                     </p>
                                     <div class="bg-slate-800 rounded-lg p-3 relative overflow-hidden">
                                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
@@ -401,7 +415,7 @@
                                             {<br>
                                             &nbsp;&nbsp;"apiKey": "AIza...",<br>
                                             &nbsp;&nbsp;"authDomain": "...",<br>
-                                            &nbsp;&nbsp;"projectId": "...",<br>
+                                            &nbsp;&nbsp;"databaseURL": "https://...",<br>
                                             &nbsp;&nbsp;...<br>
                                             }
                                         </code>
@@ -525,7 +539,7 @@
             </div>
         </transition>
 
-        <!-- Permission Error Modal (Fix for Missing Permissions) -->
+        <!-- Permission Error Modal (Updated for Realtime Database) -->
         <transition name="modal">
             <div v-if="showPermissionErrorModal" class="absolute inset-0 z-[60] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl" @click.stop>
@@ -535,25 +549,23 @@
                     </div>
                     
                     <p class="text-sm text-gray-600 leading-relaxed mb-4">
-                        您的 Firebase 数据库默认处于锁定状态。为了使用本应用，请修改 Firestore 规则以允许读写（测试模式）。
+                        您的 Firebase 数据库默认处于锁定状态。为了使用本应用，请修改 <strong>Realtime Database</strong> 规则以允许读写。
                     </p>
                     
                     <div class="bg-slate-50 p-3 rounded-xl border border-gray-200 mb-4">
-                        <div class="text-[10px] text-gray-400 uppercase font-bold mb-1">请复制以下规则:</div>
+                        <div class="text-[10px] text-gray-400 uppercase font-bold mb-1">请复制以下 JSON 规则:</div>
                         <code class="block text-[10px] font-mono text-slate-700 whitespace-pre overflow-x-auto select-all">
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true;
-    }
+{
+  "rules": {
+    ".read": true,
+    ".write": true
   }
 }
                         </code>
                     </div>
 
                     <p class="text-xs text-gray-400 mb-6">
-                        前往：Firebase Console -> Firestore Database -> Rules (规则) 标签页，粘贴并发布。
+                        前往：Firebase Console -> Realtime Database -> <strong>Rules (规则)</strong> 标签页，替换并发布。
                     </p>
 
                     <button @click="showPermissionErrorModal = false" class="w-full py-3 bg-amber-500 text-white rounded-xl font-bold shadow-lg shadow-amber-200 hover:bg-amber-600 transition-colors active:scale-95">
@@ -645,12 +657,12 @@ service cloud.firestore {
                 const newStudentInput = ref(null);
                 const editNameInput = ref(null);
                 
-                // Firestore Instance (Loaded dynamically)
+                // Realtime Database Instance (Loaded dynamically)
                 let db = null;
-                const COLLECTION_NAME = 'students';
+                const DB_ROOT = 'students';
                 
-                // Firebase modules (Loaded dynamically)
-                let _initializeApp, _getFirestore, _collection, _doc, _setDoc, _getDocs, _updateDoc, _deleteDoc;
+                // Firebase modules (Loaded dynamically for RTDB)
+                let _initializeApp, _getDatabase, _ref, _set, _get, _child, _remove, _update;
 
                 // --- Persistence & Init ---
                 onMounted(async () => {
@@ -686,10 +698,19 @@ service cloud.firestore {
                     if (!rawInput) return;
                     
                     try {
-                        // Helper to parse leniently
                         let configStr = rawInput;
                         
-                        // Extract object if user pasted "const firebaseConfig = { ... };"
+                        // Handle "const firebaseConfig = ..." or "export const ..." prefix
+                        if (configStr.includes('=')) {
+                            configStr = configStr.substring(configStr.indexOf('=') + 1).trim();
+                        }
+                        
+                        // Remove trailing semicolon
+                        if (configStr.endsWith(';')) {
+                            configStr = configStr.slice(0, -1).trim();
+                        }
+
+                        // Extract object if wrapped in other code
                         const firstBrace = configStr.indexOf('{');
                         const lastBrace = configStr.lastIndexOf('}');
                         if (firstBrace !== -1 && lastBrace !== -1) {
@@ -701,25 +722,43 @@ service cloud.firestore {
                             // Try strict JSON first
                             config = JSON.parse(configStr);
                         } catch (jsonErr) {
-                            // Fallback to JS object evaluation (handles unquoted keys, trailing commas)
-                            // Note: This is client-side input from the user, so risk is low/acceptable for this context
-                            config = new Function('return ' + configStr)();
+                            // Fallback to JS object evaluation
+                            try {
+                                config = new Function('return ' + configStr)();
+                            } catch (jsErr) {
+                                throw new Error('无法解析配置格式，请确保复制了完整的对象 {...}');
+                            }
                         }
 
-                        if (!config || !config.apiKey) {
-                            throw new Error('Invalid Config Object');
+                        if (!config || typeof config !== 'object') {
+                            throw new Error('配置无效: 必须是对象格式');
                         }
 
-                        // Store the *stringified* version for consistency if it was JS object
+                        if (!config.apiKey) {
+                            throw new Error('配置无效: 缺少 apiKey');
+                        }
+
+                        // Auto-infer databaseURL if missing but projectId exists (Common user error)
+                        if (!config.databaseURL && config.projectId) {
+                            // Default RTDB URL format for most new projects
+                            config.databaseURL = `https://${config.projectId}-default-rtdb.firebaseio.com`;
+                            showToast('已自动推断 databaseURL', 'success');
+                        }
+
+                        if (!config.databaseURL) {
+                             throw new Error('配置无效: 缺少 databaseURL (请检查 Firebase 控制台)');
+                        }
+
+                        // Store validated config
                         localStorage.setItem('class_manager_config', JSON.stringify(config));
                         
                         // Re-initialize
                         await initFirebase(config);
                         
-                        showToast('配置保存成功，正在连接云端...', 'success');
+                        showToast('配置保存成功，正在连接...', 'success');
                         await syncFromCloud();
                     } catch (e) {
-                        showToast('配置格式错误: 请确保包含 { ... }', 'error');
+                        showToast(e.message, 'error');
                         console.error("Config Parse Error", e);
                     }
                 };
@@ -734,21 +773,21 @@ service cloud.firestore {
 
                 const initFirebase = async (config) => {
                     try {
-                        // Dynamic Import to fail gracefully if offline/blocked
+                        // Dynamic Import for Realtime Database
                         const appModule = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
-                        const firestoreModule = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+                        const dbModule = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
                         
                         _initializeApp = appModule.initializeApp;
-                        _getFirestore = firestoreModule.getFirestore;
-                        _collection = firestoreModule.collection;
-                        _doc = firestoreModule.doc;
-                        _setDoc = firestoreModule.setDoc;
-                        _getDocs = firestoreModule.getDocs;
-                        _updateDoc = firestoreModule.updateDoc;
-                        _deleteDoc = firestoreModule.deleteDoc;
+                        _getDatabase = dbModule.getDatabase;
+                        _ref = dbModule.ref;
+                        _set = dbModule.set;
+                        _get = dbModule.get;
+                        _child = dbModule.child;
+                        _remove = dbModule.remove;
+                        _update = dbModule.update;
 
                         const app = _initializeApp(config);
-                        db = _getFirestore(app);
+                        db = _getDatabase(app);
                         isOnline.value = true;
                     } catch (e) {
                         console.error("Firebase Init Error", e);
@@ -760,9 +799,9 @@ service cloud.firestore {
                 // --- Helper: Central Error Handler ---
                 const handleFirebaseError = (e) => {
                     console.error("Firebase Error", e);
-                    if (e.code === 'permission-denied' || e.message?.includes('Missing or insufficient permissions')) {
+                    if (e.code === 'PERMISSION_DENIED' || e.message?.includes('permission_denied') || e.message?.includes('Permission denied')) {
                         showPermissionErrorModal.value = true;
-                        showToast('权限不足: 请检查 Firestore 规则', 'error');
+                        showToast('权限不足: 请检查 Realtime Database 规则', 'error');
                     } else {
                         showToast('操作失败: ' + (e.message || '未知错误'), 'error');
                     }
@@ -780,37 +819,41 @@ service cloud.firestore {
                     localStorage.setItem('class_manager_data', JSON.stringify(students.value));
                 };
 
-                // Sync: Cloud -> Local (Priority)
+                // Sync: Cloud (RTDB) -> Local (Priority)
                 const syncFromCloud = async () => {
                     if (!db) return;
                     try {
-                        const querySnapshot = await _getDocs(_collection(db, COLLECTION_NAME));
-                        const cloudStudents = [];
-                        querySnapshot.forEach((doc) => {
-                            cloudStudents.push(doc.data());
-                        });
-                        if (cloudStudents.length > 0) {
-                            students.value = cloudStudents;
-                            saveLocalData();
+                        const dbRef = _ref(db);
+                        const snapshot = await _get(_child(dbRef, DB_ROOT));
+                        
+                        if (snapshot.exists()) {
+                            const data = snapshot.val();
+                            // RTDB returns object { id1: val, id2: val } usually, but potentially array if keys are integers
+                            const cloudStudents = Object.values(data); 
                             
-                            // If we have a current student selected, update their reference
-                            if (currentStudent.value) {
-                                const found = students.value.find(s => s.id === currentStudent.value.id);
-                                if (found) currentStudent.value = found;
+                            if (cloudStudents.length > 0) {
+                                students.value = cloudStudents;
+                                saveLocalData();
+                                
+                                // If we have a current student selected, update their reference
+                                if (currentStudent.value) {
+                                    const found = students.value.find(s => s.id === currentStudent.value.id);
+                                    if (found) currentStudent.value = found;
+                                }
+                                
+                                showToast('已同步云端数据', 'success');
                             }
-                            
-                            showToast('已同步云端数据', 'success');
                         }
                     } catch (e) {
                         handleFirebaseError(e);
                     }
                 };
 
-                // Sync: Local -> Cloud (Individual Update)
+                // Sync: Local -> Cloud (RTDB Individual Update)
                 const upsertStudentToCloud = async (student) => {
                     if (!db) return;
                     try {
-                        await _setDoc(_doc(db, COLLECTION_NAME, student.id), student);
+                        await _set(_ref(db, DB_ROOT + '/' + student.id), student);
                     } catch (e) {
                         handleFirebaseError(e);
                     }
@@ -819,7 +862,7 @@ service cloud.firestore {
                 const deleteStudentFromCloud = async (id) => {
                     if (!db) return;
                     try {
-                        await _deleteDoc(_doc(db, COLLECTION_NAME, id));
+                        await _remove(_ref(db, DB_ROOT + '/' + id));
                     } catch (e) {
                         handleFirebaseError(e);
                     }
@@ -829,11 +872,19 @@ service cloud.firestore {
                     if(!db) return showToast('未配置云端数据库', 'error');
                     let count = 0;
                     try {
+                        // RTDB supports batch updates efficiently via 'update'
+                        const updates = {};
                         for(const s of students.value) {
-                            await _setDoc(_doc(db, COLLECTION_NAME, s.id), s);
+                            updates['/' + DB_ROOT + '/' + s.id] = s;
                             count++;
                         }
-                        showToast(`成功上传 ${count} 条数据到云端`, 'success');
+                        
+                        if (count > 0) {
+                            await _update(_ref(db), updates);
+                            showToast(`成功上传 ${count} 条数据到云端`, 'success');
+                        } else {
+                            showToast('没有数据需要上传', 'success');
+                        }
                     } catch (e) {
                         handleFirebaseError(e);
                     }
