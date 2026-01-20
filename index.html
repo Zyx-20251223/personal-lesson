@@ -47,8 +47,8 @@
 </head>
 <body class="bg-slate-50 md:bg-slate-100 text-slate-800 h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden antialiased selection:bg-indigo-100 selection:text-indigo-600">
 
-    <!-- App Container: Mobile (full) -> Tablet (Card Style) -->
-    <div id="app" v-cloak class="flex flex-col h-full w-full max-w-md md:max-w-lg md:h-[95dvh] md:rounded-[2rem] md:shadow-2xl md:border md:border-white/50 bg-white relative overflow-hidden transition-all duration-300">
+    <!-- App Container: Mobile (full) -> Tablet (Card Style) -> Landscape (Wide) -->
+    <div id="app" v-cloak class="flex flex-col h-full w-full max-w-md md:max-w-lg lg:max-w-5xl md:h-[95dvh] md:rounded-[2rem] md:shadow-2xl md:border md:border-white/50 bg-white relative overflow-hidden transition-all duration-300">
         
         <!-- Header (Global for List/Settings, but hidden in Detail view to allow custom header) -->
         <header v-if="currentView !== 'detail'" class="bg-white/80 backdrop-blur-md p-4 pt-safe z-20 flex justify-between items-center shrink-0 border-b border-gray-100 sticky top-0">
@@ -78,14 +78,15 @@
                 <div v-if="currentView === 'list'" key="list" class="h-full flex flex-col">
                     <!-- Search & Add Area -->
                     <div class="p-5 pb-2">
-                        <div class="flex gap-3 mb-4">
+                        <div class="flex gap-4 mb-4">
                             <div class="relative flex-1 group">
-                                <i class="fa-solid fa-search absolute left-4 top-3.5 text-gray-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                                <!-- Fixed: Use top-1/2 and translate-y-1/2 for perfect vertical centering -->
+                                <i class="fa-solid fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-500 transition-colors pointer-events-none"></i>
                                 <!-- Optimized Input: text-base prevents auto-zoom, inputmode for better keyboard -->
                                 <input v-model="searchQuery" type="text" placeholder="搜索学生..." inputmode="search"
                                     class="w-full pl-11 pr-4 py-3 rounded-2xl bg-white border-none shadow-sm focus:ring-2 focus:ring-indigo-100 text-base font-medium placeholder-gray-400 transition-all">
                             </div>
-                            <button @click="showAddModal = true" class="bg-indigo-600 text-white w-12 h-12 rounded-2xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:scale-105 active:scale-95 transition-all flex items-center justify-center touch-manipulation">
+                            <button @click="showAddModal = true" class="bg-indigo-600 text-white w-12 h-12 shrink-0 rounded-2xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:scale-105 active:scale-95 transition-all flex items-center justify-center touch-manipulation">
                                 <i class="fa-solid fa-plus text-lg"></i>
                             </button>
                         </div>
@@ -111,8 +112,8 @@
                     </div>
 
                     <!-- List Content -->
-                    <div class="flex-1 overflow-y-auto p-5 pt-2 space-y-3 no-scrollbar pb-24">
-                        <div v-if="filteredStudents.length === 0" class="flex flex-col items-center justify-center py-20 text-gray-300">
+                    <div class="flex-1 overflow-y-auto p-5 pt-2 space-y-3 no-scrollbar pb-24 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0 lg:content-start">
+                        <div v-if="filteredStudents.length === 0" class="flex flex-col items-center justify-center py-20 text-gray-300 lg:col-span-2">
                             <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                                 <i class="fa-solid fa-user-graduate text-3xl text-gray-300"></i>
                             </div>
@@ -151,7 +152,7 @@
                 </div>
 
                 <!-- View: Student Detail (HOME PAGE) -->
-                <div v-else-if="currentView === 'detail'" key="detail" class="h-full flex flex-col bg-white">
+                <div v-else-if="currentView === 'detail'" key="detail" class="h-full flex flex-col bg-slate-50">
                     <!-- Custom Detail Header -->
                     <div class="px-4 py-3 pt-safe flex items-center justify-between sticky top-0 bg-white z-10 border-b border-gray-50">
                         <button @click="currentView = 'list'" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl transition-colors active:scale-95 touch-manipulation">
@@ -174,92 +175,109 @@
                     </div>
 
                     <div class="flex-1 overflow-y-auto no-scrollbar pb-safe">
-                        <!-- Hero Card -->
-                        <div class="px-5 pt-4 pb-6">
-                            <div class="bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 rounded-3xl p-6 text-white shadow-xl shadow-indigo-200 relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-300">
-                                <!-- Decorative circles -->
-                                <div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-white/10 blur-xl"></div>
-                                <div class="absolute bottom-0 left-0 -ml-8 -mb-8 w-24 h-24 rounded-full bg-white/10 blur-xl"></div>
+                        <div class="lg:flex lg:items-start lg:p-6 lg:gap-8">
+                            <!-- Left Column: Info & Actions (Grid on Desktop) -->
+                            <div class="lg:w-96 lg:shrink-0 space-y-0 lg:space-y-6">
+                                <!-- Hero Card -->
+                                <div class="px-5 pt-4 pb-6 lg:p-0">
+                                    <div class="bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 rounded-3xl p-6 text-white shadow-xl shadow-indigo-200 relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-300">
+                                        <!-- Decorative circles -->
+                                        <div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-white/10 blur-xl"></div>
+                                        <div class="absolute bottom-0 left-0 -ml-8 -mb-8 w-24 h-24 rounded-full bg-white/10 blur-xl"></div>
 
-                                <div class="relative z-10 text-center">
-                                    <p class="text-indigo-100 text-xs font-medium uppercase tracking-widest mb-2 opacity-80">当前剩余课时</p>
-                                    <div class="text-7xl font-black tracking-tighter mb-4 drop-shadow-sm font-sans">
-                                        {{ currentStudent?.balance }}
-                                    </div>
-                                    <!-- Status pill removed as requested -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="px-5 mb-8">
-                            <div class="grid grid-cols-2 gap-4">
-                                <!-- Prepaid Class (Full Width) -->
-                                <button @click="showRechargeModal = true" class="col-span-2 group bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 text-emerald-700 py-4 px-6 rounded-2xl flex items-center justify-between transition-all active:scale-[0.97] shadow-sm touch-manipulation">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-emerald-200 shadow-md group-hover:scale-110 transition-transform">
-                                            <i class="fa-solid fa-wallet"></i>
-                                        </div>
-                                        <span class="font-bold text-lg">预付课时</span>
-                                    </div>
-                                    <i class="fa-solid fa-chevron-right text-emerald-300 group-hover:text-emerald-500 transition-colors"></i>
-                                </button>
-                                
-                                <!-- Class Consumption 1 Hour -->
-                                <button @click="consumeClass(1)" 
-                                    :disabled="currentStudent?.balance < 1"
-                                    class="bg-white border border-gray-100 shadow-sm p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-indigo-100 hover:shadow-md active:scale-[0.97] transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed h-24 touch-manipulation">
-                                    <span class="text-lg font-bold text-slate-700">课销1小时</span>
-                                </button>
-
-                                <!-- Class Consumption 2 Hours -->
-                                <button @click="consumeClass(2)" 
-                                    :disabled="currentStudent?.balance < 2"
-                                    class="bg-white border border-gray-100 shadow-sm p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-indigo-100 hover:shadow-md active:scale-[0.97] transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed h-24 touch-manipulation">
-                                    <span class="text-lg font-bold text-slate-700">课销2小时</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- History -->
-                        <div class="px-5 pb-10">
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 px-1">课时记录</p>
-                            <div class="relative pl-4 space-y-6 before:absolute before:left-[5px] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-100">
-                                <div v-if="sortedLogs.length === 0" class="text-xs text-gray-400 pl-4 py-2">暂无记录</div>
-                                <div v-for="(log, idx) in sortedLogs" :key="idx" class="relative pl-6">
-                                    <!-- Dot -->
-                                    <div :class="['absolute -left-[5px] top-1.5 w-[22px] h-[22px] rounded-full border-4 border-white shadow-sm flex items-center justify-center text-[8px]', 
-                                        log.amount > 0 ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white']">
-                                        <i :class="['fa-solid', log.amount > 0 ? 'fa-plus' : 'fa-minus']"></i>
-                                    </div>
-                                    
-                                    <!-- Content -->
-                                    <div class="flex justify-between items-start group">
-                                        <div>
-                                            <p class="font-bold text-slate-700 text-sm">
-                                                {{ log.amount > 0 ? '预付课时' : '课程消耗' }}
-                                                <span :class="['ml-1 font-extrabold', log.amount > 0 ? 'text-emerald-500' : 'text-amber-500']">
-                                                    {{ log.amount > 0 ? '+' : '' }}{{ log.amount }}
-                                                </span>
-                                            </p>
-                                            <div class="flex items-center gap-2 mt-1">
-                                                <p class="text-xs text-gray-400 bg-slate-50 inline-block px-2 py-1 rounded-md group-hover:bg-slate-100 transition-colors">
-                                                    {{ log.note || '无备注' }}
-                                                </p>
-                                                <p class="text-[10px] text-gray-400 font-mono">
-                                                   余额: {{ log.snapshotBalance }}
-                                                </p>
+                                        <div class="relative z-10 text-center">
+                                            <p class="text-indigo-100 text-xs font-medium uppercase tracking-widest mb-2 opacity-80">当前剩余课时</p>
+                                            <div class="text-7xl font-black tracking-tighter mb-4 drop-shadow-sm font-sans">
+                                                {{ currentStudent?.balance }}
                                             </div>
                                         </div>
-                                        <div class="text-right">
-                                            <span class="text-[10px] text-gray-300 font-mono block">{{ formatTime(log.timestamp) }}</span>
-                                            <div class="flex gap-3 justify-end mt-1.5">
-                                                <!-- Optimized Buttons: p-2 for better touch target -->
-                                                <button @click.stop="openEditLog(log)" class="text-gray-300 hover:text-indigo-500 transition-colors p-2 -mr-1 rounded-full active:bg-slate-100">
-                                                    <i class="fa-solid fa-pen text-xs"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="px-5 mb-8 lg:p-0 lg:mb-0">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <!-- Prepaid Class (Full Width) -->
+                                        <button @click="showRechargeModal = true" class="col-span-2 group bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 text-emerald-700 py-4 px-6 rounded-2xl flex items-center justify-between transition-all active:scale-[0.97] shadow-sm touch-manipulation">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-emerald-200 shadow-md group-hover:scale-110 transition-transform shrink-0">
+                                                    <i class="fa-solid fa-wallet"></i>
+                                                </div>
+                                                <span class="font-bold text-lg">预付课时</span>
+                                            </div>
+                                            <i class="fa-solid fa-chevron-right text-emerald-300 group-hover:text-emerald-500 transition-colors"></i>
+                                        </button>
+                                        
+                                        <!-- Class Consumption 1 Hour -->
+                                        <button @click="consumeClass(1)" 
+                                            :disabled="currentStudent?.balance < 1"
+                                            class="bg-white border border-gray-100 shadow-sm p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-indigo-100 hover:shadow-md active:scale-[0.97] transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed h-24 touch-manipulation">
+                                            <span class="text-lg font-bold text-slate-700">课销1小时</span>
+                                        </button>
+
+                                        <!-- Class Consumption 2 Hours -->
+                                        <button @click="consumeClass(2)" 
+                                            :disabled="currentStudent?.balance < 2"
+                                            class="bg-white border border-gray-100 shadow-sm p-4 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-indigo-100 hover:shadow-md active:scale-[0.97] transition-all disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed h-24 touch-manipulation">
+                                            <span class="text-lg font-bold text-slate-700">课销2小时</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column: History (Expanded on Desktop) -->
+                            <div class="px-5 pb-10 lg:p-0 lg:flex-1">
+                                <div class="flex items-center justify-between mb-4 px-1">
+                                    <p class="text-sm font-bold text-gray-400 uppercase tracking-wider">课时记录</p>
+                                </div>
+                                <div class="space-y-3">
+                                    <div v-if="sortedLogs.length === 0" class="flex flex-col items-center justify-center py-10 text-gray-300">
+                                        <i class="fa-regular fa-clipboard text-3xl mb-2 opacity-20"></i>
+                                        <span class="text-xs">暂无记录</span>
+                                    </div>
+                                    <!-- Fixed: Changed items-start to items-center for better icon alignment -->
+                                    <div v-for="(log, idx) in sortedLogs" :key="idx" 
+                                         class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between group active:scale-[0.98] transition-all">
+                                        
+                                        <!-- Fixed: Removed mt-0.5 to allow true centering -->
+                                        <div class="flex items-center gap-4">
+                                            <!-- Icon -->
+                                            <div :class="['w-10 h-10 rounded-full flex items-center justify-center text-white text-lg shadow-sm shrink-0', 
+                                                log.amount > 0 ? 'bg-emerald-500 shadow-emerald-200' : 'bg-amber-500 shadow-amber-200']">
+                                                <i :class="['fa-solid', log.amount > 0 ? 'fa-plus' : 'fa-minus']"></i>
+                                            </div>
+                                            
+                                            <!-- Info -->
+                                            <div class="flex flex-col">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="font-bold text-slate-700 text-base">
+                                                        {{ log.amount > 0 ? '预付课时' : '课程消耗' }}
+                                                    </span>
+                                                    <span :class="['font-black text-lg', log.amount > 0 ? 'text-emerald-500' : 'text-amber-500']">
+                                                        {{ log.amount > 0 ? '+' : '' }}{{ log.amount }}
+                                                    </span>
+                                                </div>
+                                                <div class="flex items-center gap-2 mt-1">
+                                                     <span v-if="log.note" class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
+                                                        {{ log.note }}
+                                                    </span>
+                                                    <span class="text-xs text-gray-400 font-medium">
+                                                       剩余课时: {{ log.snapshotBalance }}小时
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Meta & Actions -->
+                                        <div class="flex flex-col items-end justify-between self-stretch pl-2">
+                                            <span class="text-[11px] text-gray-300 font-bold font-mono">{{ formatTime(log.timestamp) }}</span>
+                                            
+                                            <div class="flex gap-3 mt-auto mb-0.5">
+                                                <button @click.stop="openEditLog(log)" class="text-gray-300 hover:text-indigo-500 transition-colors">
+                                                    <i class="fa-solid fa-pen text-sm"></i>
                                                 </button>
-                                                <button @click.stop="promptDeleteLog(log)" class="text-gray-300 hover:text-rose-500 transition-colors p-2 rounded-full active:bg-rose-50">
-                                                    <i class="fa-regular fa-trash-can text-xs"></i>
+                                                <button @click.stop="promptDeleteLog(log)" class="text-gray-300 hover:text-rose-500 transition-colors">
+                                                    <i class="fa-regular fa-trash-can text-sm"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -279,14 +297,17 @@
                         <h2 class="text-lg font-bold">系统设置</h2>
                     </div>
                     
-                    <div class="p-5 space-y-5 overflow-y-auto">
+                    <div class="p-5 space-y-5 overflow-y-auto lg:max-w-2xl lg:mx-auto lg:w-full">
                         <!-- Cloud Config -->
                         <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
                             <h3 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
                                 <i class="fa-brands fa-google text-indigo-500"></i> 数据同步
                             </h3>
                             <p class="text-xs text-gray-500 leading-relaxed mb-4">
-                                请复制 Firebase 控制台 > 项目设置 (Project Settings) > 常规 > 下方的 "SDK 设置与配置" 中的 <code>firebaseConfig</code> 对象内容 (包含 apiKey, authDomain, projectId 等字段) 并粘贴到此处。
+                                请复制 Firebase 控制台 > 项目设置 > 常规 > 下方的 "SDK 设置与配置" 中的 <code>firebaseConfig</code> 对象内容并粘贴。
+                                <button @click="currentView = 'help'" class="text-indigo-600 font-bold hover:underline inline-flex items-center gap-1 mt-1">
+                                    <i class="fa-regular fa-circle-question"></i> 查看详细教程
+                                </button>
                             </p>
                             <textarea v-model="firebaseConfigInput" rows="5" class="w-full text-xs font-mono p-3 bg-slate-900 text-emerald-400 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none shadow-inner" placeholder='{ "apiKey": "...", "authDomain": "...", ... }'></textarea>
                             <div class="flex gap-3">
@@ -317,6 +338,81 @@
                     
                     <div class="p-4 text-center text-[10px] text-gray-300">
                         Version 1.2.0 • Designed for Vue
+                    </div>
+                </div>
+
+                <!-- View: Help (Firebase Tutorial) -->
+                <div v-else-if="currentView === 'help'" key="help" class="h-full flex flex-col bg-slate-50">
+                    <div class="bg-white px-5 py-4 shadow-sm border-b border-gray-100 flex items-center gap-4 sticky top-0 z-10">
+                        <button @click="currentView = 'settings'" class="text-gray-400 hover:text-gray-800 transition-colors p-1">
+                            <i class="fa-solid fa-arrow-left text-xl"></i>
+                        </button>
+                        <h2 class="text-lg font-bold">配置教程</h2>
+                    </div>
+                    
+                    <div class="flex-1 overflow-y-auto p-5 pb-safe space-y-6 lg:max-w-2xl lg:mx-auto lg:w-full">
+                        <div class="space-y-4">
+                            <div class="flex gap-4">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">1</div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 mb-1">访问 Firebase 控制台</h3>
+                                    <p class="text-xs text-gray-500 leading-relaxed">
+                                        在浏览器中打开 <a href="https://console.firebase.google.com/" target="_blank" class="text-indigo-500 underline">console.firebase.google.com</a> 并登录您的 Google 账号。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">2</div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 mb-1">创建或选择项目</h3>
+                                    <p class="text-xs text-gray-500 leading-relaxed">点击 "添加项目" (Add project) 或选择一个现有的项目进入。</p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">3</div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 mb-1">进入项目设置</h3>
+                                    <p class="text-xs text-gray-500 leading-relaxed">点击左上角的 <i class="fa-solid fa-gear text-gray-400"></i> 齿轮图标，选择 <strong>项目设置 (Project settings)</strong>。</p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">4</div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 mb-1">注册 Web 应用</h3>
+                                    <p class="text-xs text-gray-500 leading-relaxed">
+                                        向下滚动到 "您的应用" (Your apps) 区域。如果没有应用，点击 <i class="fa-solid fa-code text-gray-400"></i> (Web) 图标来注册一个新应用（名称随意填写）。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold shrink-0">5</div>
+                                <div>
+                                    <h3 class="font-bold text-slate-800 mb-1">复制配置代码</h3>
+                                    <p class="text-xs text-gray-500 leading-relaxed mb-2">
+                                        在 "SDK 设置与配置" 选项中，选择 <strong>Config</strong> (不是 CDN)。复制 <code>const firebaseConfig = { ... };</code> 大括号内的内容。
+                                    </p>
+                                    <div class="bg-slate-800 rounded-lg p-3 relative overflow-hidden">
+                                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+                                        <code class="text-[10px] text-gray-400 font-mono block">
+                                            {<br>
+                                            &nbsp;&nbsp;"apiKey": "AIza...",<br>
+                                            &nbsp;&nbsp;"authDomain": "...",<br>
+                                            &nbsp;&nbsp;"projectId": "...",<br>
+                                            &nbsp;&nbsp;...<br>
+                                            }
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button @click="currentView = 'settings'" class="w-full py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-colors">
+                            我已了解，返回配置
+                        </button>
                     </div>
                 </div>
             </transition>
@@ -429,6 +525,44 @@
             </div>
         </transition>
 
+        <!-- Permission Error Modal (Fix for Missing Permissions) -->
+        <transition name="modal">
+            <div v-if="showPermissionErrorModal" class="absolute inset-0 z-[60] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl" @click.stop>
+                    <div class="flex items-center gap-3 mb-4 text-amber-500">
+                        <i class="fa-solid fa-shield-halved text-2xl"></i>
+                        <h3 class="text-xl font-bold text-slate-800">数据库权限不足</h3>
+                    </div>
+                    
+                    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+                        您的 Firebase 数据库默认处于锁定状态。为了使用本应用，请修改 Firestore 规则以允许读写（测试模式）。
+                    </p>
+                    
+                    <div class="bg-slate-50 p-3 rounded-xl border border-gray-200 mb-4">
+                        <div class="text-[10px] text-gray-400 uppercase font-bold mb-1">请复制以下规则:</div>
+                        <code class="block text-[10px] font-mono text-slate-700 whitespace-pre overflow-x-auto select-all">
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+                        </code>
+                    </div>
+
+                    <p class="text-xs text-gray-400 mb-6">
+                        前往：Firebase Console -> Firestore Database -> Rules (规则) 标签页，粘贴并发布。
+                    </p>
+
+                    <button @click="showPermissionErrorModal = false" class="w-full py-3 bg-amber-500 text-white rounded-xl font-bold shadow-lg shadow-amber-200 hover:bg-amber-600 transition-colors active:scale-95">
+                        我已修改，重试
+                    </button>
+                </div>
+            </div>
+        </transition>
+
         <!-- Recharge Modal -->
         <transition name="modal">
             <div v-if="showRechargeModal" class="absolute inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
@@ -441,8 +575,8 @@
                     <div class="mb-4">
                         <div class="flex items-center justify-center gap-4 mb-2">
                             <button @click="rechargeAmount = Math.max(1, rechargeAmount - 1)" class="w-10 h-10 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center text-lg font-bold transition-colors"><i class="fa-solid fa-minus"></i></button>
-                            <!-- Optimized Input: inputmode numeric -->
-                            <input v-model.number="rechargeAmount" type="number" inputmode="numeric" class="w-24 text-center text-4xl font-black text-emerald-600 border-b-2 border-emerald-100 focus:border-emerald-500 outline-none bg-transparent">
+                            <!-- Optimized Input: Fixed height h-16 to prevent clipping of text-4xl -->
+                            <input v-model.number="rechargeAmount" type="number" inputmode="numeric" class="w-24 h-16 text-center text-4xl font-black text-emerald-600 border-b-2 border-emerald-100 focus:border-emerald-500 outline-none bg-transparent">
                             <button @click="rechargeAmount++" class="w-10 h-10 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center text-lg font-bold transition-colors"><i class="fa-solid fa-plus"></i></button>
                         </div>
                         <p class="text-center text-xs text-gray-400 mb-2">充值数量</p>
@@ -487,7 +621,8 @@
                 const showRechargeModal = ref(false);
                 const showEditLogModal = ref(false);
                 const showDeleteLogModal = ref(false);
-                const showDeleteStudentModal = ref(false); // NEW State
+                const showDeleteStudentModal = ref(false);
+                const showPermissionErrorModal = ref(false); // NEW: Permission Error Modal
                 
                 // Form Inputs
                 const newStudentName = ref('');
@@ -500,7 +635,7 @@
                 const editingLog = ref(null); 
                 const editingLogData = ref({ amount: 0, note: '', date: '' });
                 const logToDelete = ref(null);
-                const studentToDelete = ref(null); // NEW State
+                const studentToDelete = ref(null); 
                 
                 // System Status
                 const isOnline = ref(false);
@@ -532,7 +667,11 @@
                     }
 
                     if (firebaseConfigInput.value) {
-                        await initFirebase(JSON.parse(firebaseConfigInput.value));
+                        // Optimistically try to parse stored config if it exists
+                        try {
+                            const cfg = JSON.parse(firebaseConfigInput.value);
+                            await initFirebase(cfg);
+                        } catch(e) { /* Ignore malformed local config on boot */ }
                     }
                 });
 
@@ -543,16 +682,45 @@
                 };
 
                 const saveConfig = async () => {
-                    if (!firebaseConfigInput.value.trim()) return;
+                    const rawInput = firebaseConfigInput.value.trim();
+                    if (!rawInput) return;
+                    
                     try {
-                        const config = JSON.parse(firebaseConfigInput.value);
-                        localStorage.setItem('class_manager_config', firebaseConfigInput.value);
+                        // Helper to parse leniently
+                        let configStr = rawInput;
+                        
+                        // Extract object if user pasted "const firebaseConfig = { ... };"
+                        const firstBrace = configStr.indexOf('{');
+                        const lastBrace = configStr.lastIndexOf('}');
+                        if (firstBrace !== -1 && lastBrace !== -1) {
+                            configStr = configStr.substring(firstBrace, lastBrace + 1);
+                        }
+
+                        let config;
+                        try {
+                            // Try strict JSON first
+                            config = JSON.parse(configStr);
+                        } catch (jsonErr) {
+                            // Fallback to JS object evaluation (handles unquoted keys, trailing commas)
+                            // Note: This is client-side input from the user, so risk is low/acceptable for this context
+                            config = new Function('return ' + configStr)();
+                        }
+
+                        if (!config || !config.apiKey) {
+                            throw new Error('Invalid Config Object');
+                        }
+
+                        // Store the *stringified* version for consistency if it was JS object
+                        localStorage.setItem('class_manager_config', JSON.stringify(config));
+                        
+                        // Re-initialize
                         await initFirebase(config);
+                        
                         showToast('配置保存成功，正在连接云端...', 'success');
                         await syncFromCloud();
                     } catch (e) {
-                        showToast('配置格式错误或连接失败', 'error');
-                        console.error(e);
+                        showToast('配置格式错误: 请确保包含 { ... }', 'error');
+                        console.error("Config Parse Error", e);
                     }
                 };
                 
@@ -589,6 +757,17 @@
                     }
                 };
 
+                // --- Helper: Central Error Handler ---
+                const handleFirebaseError = (e) => {
+                    console.error("Firebase Error", e);
+                    if (e.code === 'permission-denied' || e.message?.includes('Missing or insufficient permissions')) {
+                        showPermissionErrorModal.value = true;
+                        showToast('权限不足: 请检查 Firestore 规则', 'error');
+                    } else {
+                        showToast('操作失败: ' + (e.message || '未知错误'), 'error');
+                    }
+                }
+
                 // --- Actions: Data Sync Strategy ---
                 const loadLocalData = () => {
                     const localData = localStorage.getItem('class_manager_data');
@@ -623,8 +802,7 @@
                             showToast('已同步云端数据', 'success');
                         }
                     } catch (e) {
-                        console.error("Fetch Error", e);
-                        showToast('云端同步失败，使用本地数据', 'error');
+                        handleFirebaseError(e);
                     }
                 };
 
@@ -634,8 +812,7 @@
                     try {
                         await _setDoc(_doc(db, COLLECTION_NAME, student.id), student);
                     } catch (e) {
-                        console.error("Write Error", e);
-                        showToast('云端保存失败，仅保存本地', 'error');
+                        handleFirebaseError(e);
                     }
                 };
 
@@ -644,18 +821,22 @@
                     try {
                         await _deleteDoc(_doc(db, COLLECTION_NAME, id));
                     } catch (e) {
-                        console.error("Delete Error", e);
+                        handleFirebaseError(e);
                     }
                 }
 
                 const forceSyncToCloud = async () => {
                     if(!db) return showToast('未配置云端数据库', 'error');
                     let count = 0;
-                    for(const s of students.value) {
-                        await upsertStudentToCloud(s);
-                        count++;
+                    try {
+                        for(const s of students.value) {
+                            await _setDoc(_doc(db, COLLECTION_NAME, s.id), s);
+                            count++;
+                        }
+                        showToast(`成功上传 ${count} 条数据到云端`, 'success');
+                    } catch (e) {
+                        handleFirebaseError(e);
                     }
-                    showToast(`成功上传 ${count} 条数据到云端`, 'success');
                 };
 
                 // --- Actions: Business Logic ---
@@ -977,7 +1158,7 @@
 
                 return {
                     currentView, students, currentStudent, searchQuery, 
-                    showAddModal, showEditModal, showRechargeModal, showEditLogModal, showDeleteLogModal, showDeleteStudentModal,
+                    showAddModal, showEditModal, showRechargeModal, showEditLogModal, showDeleteLogModal, showDeleteStudentModal, showPermissionErrorModal,
                     newStudentName, editingName, rechargeAmount, rechargeNote,
                     firebaseConfigInput, isOnline, notification, 
                     newStudentInput, editNameInput, editingLogData, studentToDelete,
